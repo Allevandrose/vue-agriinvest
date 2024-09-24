@@ -30,7 +30,7 @@
   </div>
 
   <!-- First Navbar (Bootstrap) -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
     <div class="container">
       <!-- Logo and Brand Name -->
       <a class="navbar-brand d-flex align-items-center" href="#">
@@ -80,7 +80,7 @@
   </nav>
 
   <!-- Second Navbar (Bootstrap) -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm mt-1">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top mt-1">
     <div class="container">
       <!-- Links on the left -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
