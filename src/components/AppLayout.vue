@@ -69,11 +69,12 @@
 
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex align-items-center">
           <li class="nav-item me-2">
-            <button class="btn btn-outline-success" type="button" style="border-color: #00d257; color: #00d257">Login</button>
-          </li>
-          <li class="nav-item me-2">
-            <button class="btn btn-outline-success" type="button" style="border-color: #00d257; color: #00d257">Signup</button>
-          </li>
+  <router-link to="/login" class="btn btn-outline-success" style="border-color: #00d257; color: #00d257">Login</router-link>
+</li>
+  <li class="nav-item me-2">
+  <router-link to="/signup" class="btn btn-outline-success" style="border-color: #00d257; color: #00d257">Signup</router-link>
+  </li>
+
           <li class="nav-item">
             <a class="nav-link" href="/profile"><i class="fas fa-user" style="color: black"></i></a>
           </li>

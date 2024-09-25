@@ -1,12 +1,19 @@
 <template>
   <div id="app">
-    <router-view /> <!-- This will render the matched component for the route -->
+    <router-view />
+    <!-- This will render the matched component for the route -->
+    <Footer />
   </div>
 </template>
 
 <script>
+import Footer from './components/FooterComponent.vue';
+
 export default {
   name: "App",
+  components: {
+    Footer, // Register Footer inside the components object
+  },
 };
 </script>
 
