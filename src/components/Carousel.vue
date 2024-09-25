@@ -11,8 +11,8 @@
       >
         <div class="overlay" :class="{ 'float-in': index === currentIndex }"></div>
         <div class="carousel-content" :class="{ 'float-in-text': index === currentIndex }">
-          <h2>Hero Carousel Title</h2>
-          <p>Hero Carousel Description</p>
+          <h2>{{ slide.title }}</h2>
+          <p>{{ slide.description }}</p>
           <button class="btn-get-started">Get Started</button>
         </div>
       </div>
@@ -33,9 +33,9 @@ export default {
   data() {
     return {
       slides: [
-        { image: require('@/assets/maize.jpg') },
-        { image: require('@/assets/grape.jpg') },
-        { image: require('@/assets/hydroponics.jpg') },
+        { image: require('@/assets/maize.jpg'), title: 'Welcome to Green', description: 'Lorem ipsum dolor sit amet...' },
+        { image: require('@/assets/grape.jpg'), title: 'At vero eos et accusamus', description: 'Nam libero tempore...' },
+        { image: require('@/assets/hydroponics.jpg'), title: 'Temporibus autem quibusdam', description: 'Beatae vitae dicta sunt explicabo...' }
       ],
       currentIndex: 0,
       intervalId: null,
@@ -100,7 +100,7 @@ export default {
 }
 
 .overlay.float-in {
-  animation: floatIn 1.5s forwards; /* Increased float-in animation duration */
+  animation: floatIn 1.5s forwards; /* Float-in animation duration */
 }
 
 .carousel-content {
@@ -112,12 +112,12 @@ export default {
   z-index: 3;
   color: white; /* Ensures text is visible over the overlay */
   opacity: 0; /* Initially hidden for float-in effect */
-  transition: opacity 1.5s ease 1.5s; /* Increased duration and delay for text */
+  transition: opacity 1.5s ease 1.5s; /* Float-in for text */
 }
 
 .float-in-text {
   opacity: 1; /* Show text after the overlay */
-  animation: floatInText 1.5s forwards; /* Increased float-in animation duration for text */
+  animation: floatInText 1.5s forwards; /* Float-in animation duration for text */
 }
 
 .carousel-content h2,
