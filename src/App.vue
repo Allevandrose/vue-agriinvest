@@ -1,21 +1,12 @@
 <template>
   <div id="app">
-    <HomePage />
-    <CarouselComponent />
-    <!-- Change the name here -->
+    <router-view /> <!-- This will render the matched component for the route -->
   </div>
 </template>
 
 <script>
-import HomePage from "./components/HomePage.vue";
-import CarouselComponent from "./components/Carousel.vue"; // Import using the new name
-
 export default {
   name: "App",
-  components: {
-    HomePage,
-    CarouselComponent, // Register the CarouselComponent
-  },
 };
 </script>
 
