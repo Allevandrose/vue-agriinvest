@@ -2,18 +2,20 @@
   <!-- Carousel Section Start -->
   <div class="hero">
     <div class="carousel">
-      <div 
-        class="carousel-item" 
-        v-for="(slide, index) in slides" 
-        :key="index" 
+      <div
+        class="carousel-item"
+        v-for="(slide, index) in slides"
+        :key="index"
         :style="{ backgroundImage: `url(${slide.image})` }"
-        :class="{ active: index === currentIndex }"
+        :class="{ active: index === currentIndex, fading: index !== currentIndex }"
       >
-        <div class="overlay" :class="{ 'float-in': index === currentIndex }"></div>
-        <div class="carousel-content" :class="{ 'float-in-text': index === currentIndex }">
-          <h2>{{ slide.title }}</h2>
-          <p>{{ slide.description }}</p>
-          <button class="btn-get-started">Get Started</button>
+        <div class="overlay"></div>
+        <div class="carousel-content">
+          <h2 :class="{ 'float-in-top': index === currentIndex }">{{ slide.title }}</h2>
+          <p :class="{ 'float-in-top': index === currentIndex }">{{ slide.description }}</p>
+          <button :class="{ 'float-in-bottom': index === currentIndex }" class="btn-get-started">
+            Get Started
+          </button>
         </div>
       </div>
       <div class="carousel-control-prev" @click="prevSlide">
@@ -33,9 +35,21 @@ export default {
   data() {
     return {
       slides: [
-        { image: require('@/assets/maize.jpg'), title: 'Welcome to Green', description: 'Lorem ipsum dolor sit amet...' },
-        { image: require('@/assets/grape.jpg'), title: 'At vero eos et accusamus', description: 'Nam libero tempore...' },
-        { image: require('@/assets/hydroponics.jpg'), title: 'Temporibus autem quibusdam', description: 'Beatae vitae dicta sunt explicabo...' }
+        {
+          image: require('@/assets/maize.jpg'),
+          title: 'Welcome to Green',
+          description: 'Lorem ipsum dolor sit amet...'
+        },
+        {
+          image: require('@/assets/grape.jpg'),
+          title: 'At vero eos et accusamus',
+          description: 'Nam libero tempore...'
+        },
+        {
+          image: require('@/assets/hydroponics.jpg'),
+          title: 'Temporibus autem quibusdam',
+          description: 'Beatae vitae dicta sunt explicabo...'
+        }
       ],
       currentIndex: 0,
       intervalId: null,
@@ -58,7 +72,7 @@ export default {
       this.currentIndex = (this.currentIndex - 1 + this.slides.length) % this.slides.length;
     },
   },
-}
+};
 </script>
 
 <style scoped>
@@ -69,24 +83,29 @@ export default {
 .carousel {
   width: 100%;
   min-height: 70vh;
-  padding: 0;
-  margin: 0;
   position: relative;
-  overflow: hidden; /* Prevents overflow gaps */
+  overflow: hidden;
 }
 
 .carousel-item {
   position: absolute;
-  inset: 0; /* Fills the parent container */
+  inset: 0;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   opacity: 0;
-  transition: opacity 1.5s ease; /* Increased transition duration */
+  transition: opacity 1.5s ease-in-out; /* Smooth fade for images */
+  z-index: 1;
 }
 
 .carousel-item.active {
   opacity: 1; /* Fade in active item */
+  z-index: 2;
+}
+
+.carousel-item.fading {
+  opacity: 0; /* Fade out non-active items */
+  z-index: 1;
 }
 
 .overlay {
@@ -95,35 +114,29 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 128, 0, 0.5); /* Darker green transparent overlay */
-  z-index: 2; /* Overlay above the image but below the text */
-}
-
-.overlay.float-in {
-  animation: floatIn 1.5s forwards; /* Float-in animation duration */
+  background: rgba(0, 128, 0, 0.5); /* Green overlay */
+  z-index: 3; /* Above background but below content */
 }
 
 .carousel-content {
   position: absolute;
-  inset: 90px 64px 64px 64px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 3;
-  color: white; /* Ensures text is visible over the overlay */
-  opacity: 0; /* Initially hidden for float-in effect */
-  transition: opacity 1.5s ease 1.5s; /* Float-in for text */
-}
-
-.float-in-text {
-  opacity: 1; /* Show text after the overlay */
-  animation: floatInText 1.5s forwards; /* Float-in animation duration for text */
+  z-index: 4; /* Content on top of the overlay */
+  color: white;
+  text-align: center;
 }
 
 .carousel-content h2,
 .carousel-content p,
 .carousel-content .btn-get-started {
-  margin-bottom: 20px; /* Add margin for spacing */
+  margin-bottom: 20px;
+  opacity: 0; /* Initially hidden for float-in effect */
+  transition: opacity 1s ease;
 }
 
 .carousel-content h2 {
@@ -132,27 +145,26 @@ export default {
 }
 
 .carousel-content p {
-  font-size: 18px; /* Adjust font size */
+  font-size: 18px;
 }
 
 .carousel-content .btn-get-started {
-  color: white; /* Text color for button */
-  background: rgba(0, 255, 0, 0.8); /* Lighter green for visibility */
-  font-family: 'Arial', sans-serif; /* Adjust font family */
+  color: white;
+  background: rgba(0, 255, 0, 0.8);
+  font-family: 'Arial', sans-serif;
   font-weight: 500;
   font-size: 15px;
   letter-spacing: 1px;
-  display: inline-block;
-  padding: 10px 36px; /* Increased padding for better aesthetics */
+  padding: 10px 36px;
   border-radius: 50px;
-  border: 2px solid white; /* White border for contrast */
-  transition: all 0.5s; /* Smooth transition */
+  border: 2px solid white;
+  transition: all 0.5s;
   margin: 10px;
 }
 
 .carousel-content .btn-get-started:hover {
-  background: rgba(255, 255, 255, 0.8); /* Change background on hover */
-  color: #28a745; /* Change text color on hover */
+  background: rgba(255, 255, 255, 0.8);
+  color: #28a745;
 }
 
 .carousel-control-prev,
@@ -161,10 +173,9 @@ export default {
   top: 50%;
   transform: translateY(-50%);
   font-size: 32px;
-  line-height: 1;
   opacity: 0.5;
   transition: opacity 0.3s;
-  z-index: 4; /* Ensures arrows are on top */
+  z-index: 5;
 }
 
 .carousel-control-prev {
@@ -180,25 +191,37 @@ export default {
   opacity: 0.9;
 }
 
-@keyframes floatIn {
+@keyframes floatInTop {
   from {
     opacity: 0;
-    transform: translateY(20px); /* Start from 20px below */
+    transform: translateY(-100px); /* Start from above */
   }
   to {
     opacity: 1;
-    transform: translateY(0); /* End at the original position */
+    transform: translateY(0); /* Move to the center */
   }
 }
 
-@keyframes floatInText {
+@keyframes floatInBottom {
   from {
     opacity: 0;
-    transform: translateY(10px); /* Start from 10px below */
+    transform: translateY(100px); /* Start from below */
   }
   to {
     opacity: 1;
-    transform: translateY(0); /* End at the original position */
+    transform: translateY(0); /* Move to the center */
   }
+}
+
+/* Apply animation for text floating in from the top */
+.float-in-top {
+  opacity: 1;
+  animation: floatInTop 1.5s ease forwards;
+}
+
+/* Apply animation for button floating in from the bottom */
+.float-in-bottom {
+  opacity: 1;
+  animation: floatInBottom 1.5s ease forwards;
 }
 </style>
