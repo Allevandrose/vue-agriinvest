@@ -1,188 +1,204 @@
 <template>
   <!-- Carousel Section Start -->
-  <div class="carousel-wrapper">
-    <!-- Carousel 1 -->
-    <section class="splide" aria-label="Splide Carousel 1">
-      <div class="splide__track">
-        <ul class="splide__list">
-          <li class="splide__slide">
-            <div class="content-wrapper">
-              <div class="description">
-                <h3>Slide 1 Title</h3>
-                <p>This is a description of the first slide.</p>
-              </div>
-              <img src="@/assets/car1.jpeg" alt="Slide 1 Image" />
-            </div>
-          </li>
-          <li class="splide__slide">
-            <div class="content-wrapper">
-              <div class="description">
-                <h3>Slide 2 Title</h3>
-                <p>This is a description of the second slide.</p>
-              </div>
-              <img src="@/assets/car3.jpeg" alt="Slide 2 Image" />
-            </div>
-          </li>
-          <li class="splide__slide">
-            <div class="content-wrapper">
-              <div class="description">
-                <h3>Slide 3 Title</h3>
-                <p>This is a description of the third slide.</p>
-              </div>
-              <img src="@/assets/car4.jpeg" alt="Slide 3 Image" />
-            </div>
-          </li>
-          <li class="splide__slide">
-            <div class="content-wrapper">
-              <div class="description">
-                <h3>Slide 4 Title</h3>
-                <p>This is a description of the fourth slide.</p>
-              </div>
-              <img
-                style="height: 300px; width: 370px"
-                src="@/assets/chinese cabbage.jpeg"
-                alt="Slide 4 Image"
-              />
-            </div>
-          </li>
-        </ul>
+  <div class="hero">
+    <div class="carousel">
+      <div 
+        class="carousel-item" 
+        v-for="(slide, index) in slides" 
+        :key="index" 
+        :style="{ backgroundImage: `url(${slide.image})` }"
+        :class="{ active: index === currentIndex }"
+      >
+        <div class="overlay" :class="{ 'float-in': index === currentIndex }"></div>
+        <div class="carousel-content" :class="{ 'float-in-text': index === currentIndex }">
+          <h2>Hero Carousel Title</h2>
+          <p>Hero Carousel Description</p>
+          <button class="btn-get-started">Get Started</button>
+        </div>
       </div>
-
-      <!-- Custom Arrows -->
-      <div class="splide__arrows">
-        <button class="splide__arrow splide__arrow--prev">
-          <i class="fa-solid fa-arrow-left"></i>
-        </button>
-        <button class="splide__arrow splide__arrow--next">
-          <i class="fa-solid fa-arrow-right"></i>
-        </button>
+      <div class="carousel-control-prev" @click="prevSlide">
+        <i class="fa-solid fa-arrow-left"></i>
       </div>
-    </section>
+      <div class="carousel-control-next" @click="nextSlide">
+        <i class="fa-solid fa-arrow-right"></i>
+      </div>
+    </div>
   </div>
   <!-- Carousel Section End -->
 </template>
 
 <script>
-import { onMounted } from "vue";
-import Splide from "@splidejs/splide";
-import "@splidejs/splide/dist/css/splide.min.css";
-
 export default {
   name: "CarouselComponent",
-  setup() {
-    onMounted(() => {
-      new Splide(".splide", {
-        type: "loop",
-        heightRatio: 0.5,
-        autoplay: true,
-        interval: 3000,
-        pauseOnHover: true,
-        arrows: false, // Disable default arrows
-      }).mount();
-
-      // Manual navigation arrows
-      const splide = document.querySelector(".splide").splide;
-      document
-        .querySelector(".splide__arrow--prev")
-        .addEventListener("click", () => splide.go("<"));
-
-      document
-        .querySelector(".splide__arrow--next")
-        .addEventListener("click", () => splide.go(">"));
-    });
+  data() {
+    return {
+      slides: [
+        { image: require('@/assets/maize.jpg') },
+        { image: require('@/assets/grape.jpg') },
+        { image: require('@/assets/hydroponics.jpg') },
+      ],
+      currentIndex: 0,
+      intervalId: null,
+    };
   },
-};
+  mounted() {
+    this.startCarousel();
+  },
+  beforeUnmount() {
+    clearInterval(this.intervalId);
+  },
+  methods: {
+    startCarousel() {
+      this.intervalId = setInterval(this.nextSlide, 6000); // Set interval to 6 seconds
+    },
+    nextSlide() {
+      this.currentIndex = (this.currentIndex + 1) % this.slides.length;
+    },
+    prevSlide() {
+      this.currentIndex = (this.currentIndex - 1 + this.slides.length) % this.slides.length;
+    },
+  },
+}
 </script>
 
 <style scoped>
-.carousel-wrapper {
-  height: calc(100vh - 80px); /* Adjust height based on navbar */
+.hero {
+  padding: 0;
+}
+
+.carousel {
+  width: 100%;
+  min-height: 70vh;
+  padding: 0;
+  margin: 0;
   position: relative;
-  margin: 20px 0;
+  overflow: hidden; /* Prevents overflow gaps */
 }
 
-.splide__slide {
-  display: flex;
-  justify-content: center; /* Center the content wrapper */
-  align-items: center;
-  height: 100%;
-}
-
-.content-wrapper {
-  display: flex;
-  justify-content: space-between; /* Space between content and image */
-  align-items: center; /* Center content vertically */
-  width: 100%; /* Full width */
-  padding: 20px; /* Add some padding */
-}
-
-.splide__slide img {
-  max-width: 50%; /* Adjust max width of images */
-  height: auto; /* Maintain aspect ratio */
-}
-
-.description {
-  max-width: 40%; /* Adjust the width of the description */
-  font-size: 1.2rem;
-  color: black; /* Change text color to black */
-  /* Remove background */
-  padding: 10px;
-}
-
-/* Custom navigation arrows */
-.splide__arrows {
-  display: flex;
-  justify-content: center;
+.carousel-item {
   position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
+  inset: 0; /* Fills the parent container */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 1.5s ease; /* Increased transition duration */
 }
 
-.splide__arrow {
-  background-color: #00d27c; /* Background color for arrows */
-  border: 2px solid #00d27c; /* Border color */
-  border-radius: 50%; /* Rounded corners */
-  width: 40px; /* Width of the arrow button */
-  height: 40px; /* Height of the arrow button */
+.carousel-item.active {
+  opacity: 1; /* Fade in active item */
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 128, 0, 0.5); /* Darker green transparent overlay */
+  z-index: 2; /* Overlay above the image but below the text */
+}
+
+.overlay.float-in {
+  animation: floatIn 1.5s forwards; /* Increased float-in animation duration */
+}
+
+.carousel-content {
+  position: absolute;
+  inset: 90px 64px 64px 64px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: white; /* Color of the arrow icon */
-  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+  z-index: 3;
+  color: white; /* Ensures text is visible over the overlay */
+  opacity: 0; /* Initially hidden for float-in effect */
+  transition: opacity 1.5s ease 1.5s; /* Increased duration and delay for text */
 }
 
-.splide__arrow:hover {
-  background-color: white; /* Background color on hover */
-  border-color: white; /* Border color on hover */
-  color: #333; /* Arrow icon color on hover */
+.float-in-text {
+  opacity: 1; /* Show text after the overlay */
+  animation: floatInText 1.5s forwards; /* Increased float-in animation duration for text */
 }
 
-/* Remove the pagination */
-.splide__pagination {
-  display: none;
+.carousel-content h2,
+.carousel-content p,
+.carousel-content .btn-get-started {
+  margin-bottom: 20px; /* Add margin for spacing */
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .description {
-    max-width: 60%; /* Adjust description width for smaller screens */
-    font-size: 1rem; /* Smaller font size */
-  }
+.carousel-content h2 {
+  font-size: 48px;
+  font-weight: 700;
+}
 
-  .splide__slide img {
-    max-width: 70%; /* Adjust image size for smaller screens */
-  }
+.carousel-content p {
+  font-size: 18px; /* Adjust font size */
+}
 
-  .content-wrapper {
-    flex-direction: column; /* Stack content and image */
-    align-items: center; /* Center align content */
-  }
+.carousel-content .btn-get-started {
+  color: white; /* Text color for button */
+  background: rgba(0, 255, 0, 0.8); /* Lighter green for visibility */
+  font-family: 'Arial', sans-serif; /* Adjust font family */
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 1px;
+  display: inline-block;
+  padding: 10px 36px; /* Increased padding for better aesthetics */
+  border-radius: 50px;
+  border: 2px solid white; /* White border for contrast */
+  transition: all 0.5s; /* Smooth transition */
+  margin: 10px;
+}
 
-  .splide__arrows {
-    bottom: 20px; /* Adjust arrow position */
+.carousel-content .btn-get-started:hover {
+  background: rgba(255, 255, 255, 0.8); /* Change background on hover */
+  color: #28a745; /* Change text color on hover */
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 32px;
+  line-height: 1;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+  z-index: 4; /* Ensures arrows are on top */
+}
+
+.carousel-control-prev {
+  left: 10px;
+}
+
+.carousel-control-next {
+  right: 10px;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+  opacity: 0.9;
+}
+
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px); /* Start from 20px below */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); /* End at the original position */
+  }
+}
+
+@keyframes floatInText {
+  from {
+    opacity: 0;
+    transform: translateY(10px); /* Start from 10px below */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); /* End at the original position */
   }
 }
 </style>
